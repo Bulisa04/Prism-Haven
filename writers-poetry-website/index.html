@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prism Haven | Where Every Story Belongs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Prism Haven home">
+      <span class="brand-mark">PH</span>
+      <span>Prism Haven</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="index.html" aria-current="page">Home</a>
+      <a href="pages/books.html">Library</a>
+      <a href="pages/authors.html">Authors</a>
+      <a href="pages/community.html">Community</a>
+      <a href="pages/submit.html">Submit Book</a>
+      <a href="pages/about.html">About</a>
+      <a href="pages/contact.html">Contact</a>
+      <a href="pages/signin.html">Sign In</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero hero-image">
+      <div class="hero-copy">
+        <p class="eyebrow">Where Every Story Belongs</p>
+        <h1>PRISM HAVEN</h1>
+        <p class="lead">
+          A home for readers, writers, and creators who believe in the power of diverse storytelling.
+        </p>
+        <div class="actions" aria-label="Primary actions">
+          <a class="button primary" href="pages/books.html">Explore Stories</a>
+          <a class="button secondary" href="pages/signin.html?role=author">Join as an Author</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="intro-band" aria-label="Why Prism Haven">
+      <div>
+        <p class="section-kicker">Why Prism Haven?</p>
+        <h2>We exist to create a space where every storyteller is seen, valued, and celebrated.</h2>
+      </div>
+      <p>
+        Every voice. Every perspective. Every story. Prism Haven connects readers and creators through books, chapters, communities, and stories that make people feel they belong.
+      </p>
+    </section>
+
+    <section class="feature-grid" aria-label="Prism Haven values">
+      <article>
+        <span class="feature-icon">01</span>
+        <h3>Stories Are Celebrated</h3>
+        <p>Every voice. Every perspective. Every story.</p>
+      </article>
+      <article>
+        <span class="feature-icon">02</span>
+        <h3>Creators Are Empowered</h3>
+        <p>A place to create freely and grow confidently.</p>
+      </article>
+      <article>
+        <span class="feature-icon">03</span>
+        <h3>Communities Are Built</h3>
+        <p>Connecting readers and creators through storytelling.</p>
+      </article>
+    </section>
+
+    <section class="split-section">
+      <div class="image-panel reading-image" role="img" aria-label="A quiet writing desk with notebooks and warm sunlight"></div>
+      <div class="text-panel">
+        <p class="section-kicker">For Our Readers</p>
+        <h2>For those looking for stories where they can see themselves in.</h2>
+        <p>
+          We know how difficult it can be to find characters, relationships, and worlds that truly resonate with who you are.
+        </p>
+        <p>
+          You deserve stories that reflect you. You deserve to belong.
+        </p>
+        <a class="text-link" href="pages/books.html">Explore the Library</a>
+      </div>
+    </section>
+
+    <section class="beliefs-section" aria-labelledby="beliefs-title">
+      <div class="section-heading">
+        <p class="section-kicker">What We Believe</p>
+        <h2 id="beliefs-title">Stories can inspire, heal, educate, and connect people across the world.</h2>
+      </div>
+      <div class="values-grid">
+        <article>
+          <h3>Every Story Matters</h3>
+          <p>Stories have the power to inspire, heal, educate, and connect people across the world.</p>
+        </article>
+        <article>
+          <h3>Every Creator Deserves a Voice</h3>
+          <p>Writers, artists, and storytellers should never feel pressured to change who they are or what they create to be valued.</p>
+        </article>
+        <article>
+          <h3>Community Comes First</h3>
+          <p>Great stories bring people together. We believe in building spaces where readers and creators can connect, support one another, and grow together.</p>
+        </article>
+        <article>
+          <h3>Diversity Makes Storytelling Stronger</h3>
+          <p>The more voices we hear, the richer our stories become.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Prism Haven &copy; 2026. Where Every Story Belongs.</p>
+  </footer>
+</body>
+</html>

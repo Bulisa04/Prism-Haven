@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In | Prism Haven</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+  <script src="../app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="Prism Haven home">
+      <span class="brand-mark">PH</span>
+      <span>Prism Haven</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <a href="books.html">Library</a>
+      <a href="authors.html">Authors</a>
+      <a href="community.html">Community</a>
+      <a href="submit.html">Submit Book</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="signin.html" aria-current="page">Sign In</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-heading compact">
+      <p class="eyebrow">Sign In</p>
+      <h1>Create your Prism Haven account.</h1>
+      <p class="lead">Readers can browse and enjoy published stories. Authors can publish books and chapters to the Library.</p>
+    </section>
+
+    <section class="auth-layout">
+      <form id="signinForm" class="auth-form">
+        <fieldset class="auth-mode-fieldset">
+          <legend>Account access</legend>
+          <label>
+            <input type="radio" name="authMode" value="signup" checked />
+            <span>Create account</span>
+          </label>
+          <label>
+            <input type="radio" name="authMode" value="signin" />
+            <span>Sign in</span>
+          </label>
+        </fieldset>
+
+        <label data-signup-only>
+          Display name
+          <input name="displayName" type="text" placeholder="Your name or pen name" required />
+        </label>
+        <label>
+          Email
+          <input name="email" type="email" placeholder="you@example.com" required />
+        </label>
+        <label>
+          Password
+          <input name="password" type="password" minlength="8" placeholder="At least 8 characters" autocomplete="current-password" required />
+        </label>
+
+        <fieldset class="role-fieldset" data-signup-only>
+          <legend>Account type</legend>
+          <label class="role-option">
+            <input type="radio" name="role" value="reader" checked />
+            <span>
+              <strong>Reader</strong>
+              Browse the Library and read published books and chapters.
+            </span>
+          </label>
+          <label class="role-option">
+            <input type="radio" name="role" value="author" />
+            <span>
+              <strong>Author</strong>
+              Publish books and chapters, then appear on the Authors page.
+            </span>
+          </label>
+        </fieldset>
+
+        <button class="button primary" type="submit"><span class="auth-submit-label">Create Account</span></button>
+        <p id="signinStatus" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <aside class="guidelines">
+        <p class="section-kicker">Launch Note</p>
+        <h2>Supabase will secure Reader and Author roles.</h2>
+        <p>
+          Reader accounts can read and join community conversations. Author accounts can publish books and chapters after signing in with their password.
+        </p>
+      </aside>
+    </section>
+  </main>
+
+  <footer>
+    <p>Prism Haven &copy; 2026. Where Every Story Belongs.</p>
+  </footer>
+</body>
+</html>

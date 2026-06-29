@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community | Prism Haven</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+  <script src="../app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="Prism Haven home">
+      <span class="brand-mark">PH</span>
+      <span>Prism Haven</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <a href="books.html">Library</a>
+      <a href="authors.html">Authors</a>
+      <a href="community.html" aria-current="page">Community</a>
+      <a href="submit.html">Submit Book</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="signin.html">Sign In</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-heading">
+      <p class="eyebrow">Community</p>
+      <h1>Readers and creators grow stronger together.</h1>
+      <p class="lead">Use this page for the updates, resources, events, and recommendations you plan to add as Prism Haven grows.</p>
+    </section>
+
+    <section class="values-grid community-grid" aria-label="Community areas">
+      <article>
+        <h3>Writing Resources</h3>
+        <p>Guides, prompts, craft notes, publishing tips, and tools for authors building their stories.</p>
+      </article>
+      <article>
+        <h3>Community Events</h3>
+        <p>Upcoming workshops, read-alongs, launch parties, live conversations, and online gatherings.</p>
+      </article>
+      <article>
+        <h3>Author Spotlights</h3>
+        <p>Features that introduce Prism Haven creators, their work, and the worlds they are building.</p>
+      </article>
+      <article>
+        <h3>Writing Challenges</h3>
+        <p>Monthly prompts, chapter challenges, revision sprints, and creative goals for the community.</p>
+      </article>
+      <article>
+        <h3>Reader Recommendations</h3>
+        <p>Curated reads, favorite chapters, themed lists, and reader-led discoveries from the library.</p>
+      </article>
+    </section>
+
+    <section class="community-blog" aria-labelledby="community-blog-title">
+      <div class="section-heading">
+        <p class="section-kicker">Community Blog</p>
+        <h2 id="community-blog-title">Start a conversation.</h2>
+        <p>Share updates, ask questions, recommend stories, and reply to each other like a community comment thread.</p>
+      </div>
+
+      <form id="blogPostForm" class="blog-form">
+        <label>
+          Your name
+          <input name="postAuthor" type="text" placeholder="Your name or username" required />
+        </label>
+        <label>
+          Post title
+          <input name="postTitle" type="text" placeholder="What do you want to talk about?" required />
+        </label>
+        <label>
+          Message
+          <textarea name="postBody" rows="5" placeholder="Share your thoughts with the Prism Haven community..." required></textarea>
+        </label>
+        <button class="button primary" type="submit">Post to Community</button>
+        <p id="blogStatus" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <div id="blogFeed" class="blog-feed" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Prism Haven &copy; 2026. Communities are built through storytelling.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,34 @@
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[redirects]]
+  from = "/library"
+  to = "/pages/books.html"
+  status = 200
+
+[[redirects]]
+  from = "/authors"
+  to = "/pages/authors.html"
+  status = 200
+
+[[redirects]]
+  from = "/community"
+  to = "/pages/community.html"
+  status = 200
+
+[[redirects]]
+  from = "/submit"
+  to = "/pages/submit.html"
+  status = 200
+
+[[redirects]]
+  from = "/signin"
+  to = "/pages/signin.html"
+  status = 200

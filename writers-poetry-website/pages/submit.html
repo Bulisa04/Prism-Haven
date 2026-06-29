@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit Book | Prism Haven</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+  <script src="../app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="Prism Haven home">
+      <span class="brand-mark">PH</span>
+      <span>Prism Haven</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <a href="books.html">Library</a>
+      <a href="authors.html">Authors</a>
+      <a href="community.html">Community</a>
+      <a href="submit.html" aria-current="page">Submit Book</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="signin.html">Sign In</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-heading compact">
+      <p class="eyebrow">Join as an Author</p>
+      <h1>Share your story with Prism Haven.</h1>
+      <p class="lead">Author accounts can publish books and chapters. Add your author profile picture, book details, genre, LGBTQ category, story tags, and chapter or manuscript text.</p>
+    </section>
+
+    <section class="submit-layout">
+      <form id="submissionForm" class="submission-form">
+        <label>
+          Author name
+          <input name="writer" type="text" placeholder="Your name or pen name" required />
+        </label>
+        <label>
+          Author profile picture
+          <input name="authorPhoto" type="file" accept="image/*" />
+        </label>
+        <label>
+          Book or chapter title
+          <input name="title" type="text" placeholder="Book title, chapter title, or series name" required />
+        </label>
+        <label>
+          Submission type
+          <select name="submissionType" required>
+            <option value="">Choose a submission type</option>
+            <option>Full Book</option>
+            <option>Chapter</option>
+            <option>Book Excerpt</option>
+            <option>Serialized Story</option>
+            <option>Novella</option>
+            <option>Short Story Collection</option>
+          </select>
+        </label>
+        <label>
+          Book genre
+          <select name="bookGenre" required>
+            <option value="">Choose a book genre</option>
+            <option>Fantasy</option>
+            <option>Romance</option>
+            <option>Paranormal</option>
+            <option>Science Fiction</option>
+            <option>Mystery</option>
+            <option>Thriller</option>
+            <option>Horror</option>
+            <option>Adventure</option>
+            <option>Drama</option>
+            <option>Comedy</option>
+            <option>Poetry</option>
+            <option>Fan Fiction</option>
+            <option>Non-Fiction</option>
+          </select>
+        </label>
+        <label>
+          LGBTQ category
+          <select name="lgbtqCategory">
+            <option value="">No specific category</option>
+            <option>Sapphic (WLW)</option>
+            <option>Gay (MLM)</option>
+            <option>Bisexual</option>
+            <option>Transgender</option>
+            <option>Non-Binary</option>
+            <option>Queer Romance</option>
+            <option>LGBTQ+ Fantasy</option>
+            <option>LGBTQ+ Paranormal</option>
+          </select>
+        </label>
+        <label>
+          Reader filter
+          <select name="readerFilter" required>
+            <option value="">Choose a reader filter</option>
+            <option>Completed</option>
+            <option>Ongoing</option>
+            <option>New Release</option>
+            <option>Recently Updated</option>
+          </select>
+        </label>
+
+        <fieldset class="tag-fieldset">
+          <legend>Story tags</legend>
+          <div class="checkbox-grid">
+            <label><input type="checkbox" name="storyTags" value="Fated Mates" /> Fated Mates</label>
+            <label><input type="checkbox" name="storyTags" value="Enemies to Lovers" /> Enemies to Lovers</label>
+            <label><input type="checkbox" name="storyTags" value="Friends to Lovers" /> Friends to Lovers</label>
+            <label><input type="checkbox" name="storyTags" value="Slow Burn" /> Slow Burn</label>
+            <label><input type="checkbox" name="storyTags" value="Second Chance Romance" /> Second Chance Romance</label>
+            <label><input type="checkbox" name="storyTags" value="Age Gap" /> Age Gap</label>
+            <label><input type="checkbox" name="storyTags" value="Royalty" /> Royalty</label>
+            <label><input type="checkbox" name="storyTags" value="Magic Academy" /> Magic Academy</label>
+            <label><input type="checkbox" name="storyTags" value="Dragons" /> Dragons</label>
+            <label><input type="checkbox" name="storyTags" value="Vampires" /> Vampires</label>
+            <label><input type="checkbox" name="storyTags" value="Werewolves" /> Werewolves</label>
+            <label><input type="checkbox" name="storyTags" value="Witches" /> Witches</label>
+            <label><input type="checkbox" name="storyTags" value="Demons" /> Demons</label>
+            <label><input type="checkbox" name="storyTags" value="Gods & Goddesses" /> Gods & Goddesses</label>
+            <label><input type="checkbox" name="storyTags" value="Ancient Powers" /> Ancient Powers</label>
+            <label><input type="checkbox" name="storyTags" value="Chosen One" /> Chosen One</label>
+            <label><input type="checkbox" name="storyTags" value="Forbidden Love" /> Forbidden Love</label>
+            <label><input type="checkbox" name="storyTags" value="Arranged Marriage" /> Arranged Marriage</label>
+          </div>
+        </fieldset>
+
+        <label>
+          Book description, chapter, or manuscript text
+          <textarea name="body" rows="11" placeholder="Paste your chapter, excerpt, synopsis, or full book text here..." required></textarea>
+        </label>
+        <button class="button primary" type="submit">Publish to Library</button>
+        <p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <aside class="guidelines" aria-label="Submission guidelines">
+        <p class="section-kicker">Before Posting</p>
+        <h2>Keep the haven generous.</h2>
+        <ul>
+          <li>Share original books, chapters, excerpts, or serial updates.</li>
+          <li>Select the genre, category, and tags that best help readers find your story.</li>
+          <li>Add a profile picture so the Authors page can show your author card.</li>
+          <li>Use a clear book title, chapter title, or series name.</li>
+          <li>Read other authors with care and respect.</li>
+        </ul>
+      </aside>
+    </section>
+  </main>
+
+  <footer>
+    <p>Prism Haven &copy; 2026. Thank you for trusting the shelf.</p>
+  </footer>
+</body>
+</html>

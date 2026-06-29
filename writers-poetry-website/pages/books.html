@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Library | Prism Haven</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+  <script src="../app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="Prism Haven home">
+      <span class="brand-mark">PH</span>
+      <span>Prism Haven</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <a href="books.html" aria-current="page">Library</a>
+      <a href="authors.html">Authors</a>
+      <a href="community.html">Community</a>
+      <a href="submit.html">Submit Book</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="signin.html">Sign In</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-heading">
+      <p class="eyebrow">Library</p>
+      <h1>Explore stories by genre, identity, tags, and reader filters.</h1>
+      <p class="lead">Find books and chapters where every story belongs, from fantasy and romance to LGBTQ+ worlds, fan fiction, and community favorites.</p>
+    </section>
+
+    <section class="library-filter" aria-labelledby="library-filter-title">
+      <div>
+        <p class="section-kicker">Genres Tab</p>
+        <h2 id="library-filter-title">Filter the library.</h2>
+      </div>
+
+      <div class="filter-group" aria-label="Genres">
+        <h3>Genre</h3>
+        <div class="genre-controls">
+          <button class="genre-filter is-active" type="button" data-filter-type="all" data-filter-value="All">All</button>
+          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Fantasy">Fantasy</button>
+          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Romance">Romance</button>
+          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Paranormal">Paranormal</button>
+          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Science Fiction">Science Fiction</button>
+          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Mystery">Mystery</button>
+          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Thriller">Thriller</button>
+          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Horror">Horror</button>
+          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Adventure">Adventure</button>
+          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Drama">Drama</button>
+          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Comedy">Comedy</button>
+          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Poetry">Poetry</button>
+          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Fan Fiction">Fan Fiction</button>
+          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Non-Fiction">Non-Fiction</button>
+        </div>
+      </div>
+
+      <div class="filter-group" aria-label="LGBTQ categories">
+        <h3>LGBTQ Categories</h3>
+        <div class="genre-controls">
+          <button class="genre-filter" type="button" data-filter-type="lgbtq" data-filter-value="Sapphic (WLW)">Sapphic (WLW)</button>
+          <button class="genre-filter" type="button" data-filter-type="lgbtq" data-filter-value="Gay (MLM)">Gay (MLM)</button>
+          <button class="genre-filter" type="button" data-filter-type="lgbtq" data-filter-value="Bisexual">Bisexual</button>
+          <button class="genre-filter" type="button" data-filter-type="lgbtq" data-filter-value="Transgender">Transgender</button>
+          <button class="genre-filter" type="button" data-filter-type="lgbtq" data-filter-value="Non-Binary">Non-Binary</button>
+          <button class="genre-filter" type="button" data-filter-type="lgbtq" data-filter-value="Queer Romance">Queer Romance</button>
+          <button class="genre-filter" type="button" data-filter-type="lgbtq" data-filter-value="LGBTQ+ Fantasy">LGBTQ+ Fantasy</button>
+          <button class="genre-filter" type="button" data-filter-type="lgbtq" data-filter-value="LGBTQ+ Paranormal">LGBTQ+ Paranormal</button>
+        </div>
+      </div>
+
+      <div class="filter-group" aria-label="Story tags">
+        <h3>Story Tags</h3>
+        <div class="genre-controls">
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Fated Mates">Fated Mates</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Enemies to Lovers">Enemies to Lovers</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Friends to Lovers">Friends to Lovers</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Slow Burn">Slow Burn</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Second Chance Romance">Second Chance Romance</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Age Gap">Age Gap</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Royalty">Royalty</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Magic Academy">Magic Academy</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Dragons">Dragons</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Vampires">Vampires</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Werewolves">Werewolves</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Witches">Witches</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Demons">Demons</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Gods & Goddesses">Gods & Goddesses</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Ancient Powers">Ancient Powers</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Chosen One">Chosen One</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Forbidden Love">Forbidden Love</button>
+          <button class="genre-filter" type="button" data-filter-type="tag" data-filter-value="Arranged Marriage">Arranged Marriage</button>
+        </div>
+      </div>
+
+      <div class="filter-group" aria-label="Reader filters">
+        <h3>Reader Filters</h3>
+        <div class="genre-controls">
+          <button class="genre-filter" type="button" data-filter-type="status" data-filter-value="Completed">Completed</button>
+          <button class="genre-filter" type="button" data-filter-type="status" data-filter-value="Ongoing">Ongoing</button>
+          <button class="genre-filter" type="button" data-filter-type="status" data-filter-value="New Release">New Release</button>
+          <button class="genre-filter" type="button" data-filter-type="status" data-filter-value="Most Popular">Most Popular</button>
+          <button class="genre-filter" type="button" data-filter-type="status" data-filter-value="Recently Updated">Recently Updated</button>
+          <button class="genre-filter" type="button" data-filter-type="status" data-filter-value="Editor's Picks">Editor's Picks</button>
+        </div>
+      </div>
+
+      <p id="filterStatus" class="filter-status" aria-live="polite"></p>
+    </section>
+
+    <section class="shelf-section" aria-labelledby="featured-title">
+      <div class="section-heading">
+        <p class="section-kicker">Featured Shelf</p>
+        <h2 id="featured-title">Editor's Picks</h2>
+      </div>
+      <div class="work-grid">
+        <article class="work-card" data-genre="Fantasy" data-lgbtq="LGBTQ+ Fantasy" data-tags="Magic Academy|Chosen One|Ancient Powers" data-status="Editor's Picks">
+          <div class="work-meta">
+            <span>Fantasy</span>
+            <span>LGBTQ+ Fantasy</span>
+            <span>Editor's Picks</span>
+          </div>
+          <h3>The City Beneath the Glass</h3>
+          <p>Amara finds a map hidden inside her grandmother's old dictionary, and every street on it leads to a city no one in her family is allowed to name.</p>
+        </article>
+        <article class="work-card" data-genre="Romance" data-lgbtq="Sapphic (WLW)" data-tags="Friends to Lovers|Slow Burn|Forbidden Love" data-status="Completed">
+          <div class="work-meta">
+            <span>Romance</span>
+            <span>Sapphic (WLW)</span>
+            <span>Completed</span>
+          </div>
+          <h3>Letters Left at Platform Nine</h3>
+          <p>Two strangers keep missing the same train and leaving notes in the same cracked station bench, slowly writing themselves into each other's lives.</p>
+        </article>
+        <article class="work-card" data-genre="Paranormal" data-lgbtq="LGBTQ+ Paranormal" data-tags="Fated Mates|Vampires|Werewolves" data-status="New Release">
+          <div class="work-meta">
+            <span>Paranormal</span>
+            <span>LGBTQ+ Paranormal</span>
+            <span>New Release</span>
+          </div>
+          <h3>When the Moon Remembers</h3>
+          <p>A runaway archivist discovers that every full moon unlocks a different chapter of a love story older than the city itself.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="shelf-section" aria-labelledby="community-title">
+      <div class="section-heading">
+        <p class="section-kicker">Community Shelf</p>
+        <h2 id="community-title">Community Books and Chapters</h2>
+      </div>
+      <div id="communityShelf" class="work-grid empty-ready" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Prism Haven &copy; 2026. Where Every Story Belongs.</p>
+  </footer>
+</body>
+</html>

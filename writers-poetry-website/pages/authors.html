@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authors | Prism Haven</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-config.js"></script>
+  <script src="../app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="Prism Haven home">
+      <span class="brand-mark">PH</span>
+      <span>Prism Haven</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="../index.html">Home</a>
+      <a href="books.html">Library</a>
+      <a href="authors.html" aria-current="page">Authors</a>
+      <a href="community.html">Community</a>
+      <a href="submit.html">Submit Book</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="signin.html">Sign In</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-heading">
+      <p class="eyebrow">Authors</p>
+      <h1>Meet the creators building Prism Haven.</h1>
+      <p class="lead">This page updates automatically when a writer publishes a book or chapter. Uploaded profile pictures appear with each author's card.</p>
+    </section>
+
+    <section class="shelf-section" aria-labelledby="authors-title">
+      <div class="section-heading">
+        <p class="section-kicker">Creator Profiles</p>
+        <h2 id="authors-title">Author Directory</h2>
+      </div>
+      <div id="authorsGrid" class="author-grid" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Prism Haven &copy; 2026. Creators are empowered here.</p>
+  </footer>
+</body>
+</html>
