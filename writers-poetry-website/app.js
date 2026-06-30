@@ -110,17 +110,27 @@ function readFileAsDataUrl(file) {
 
 function mapBookRow(row) {
   const profile = row.profiles || {};
+  const chapters = row.book_chapters || [];
   return {
     id: row.id,
     writer: profile.pen_name || row.author_name || "Anonymous Author",
     authorPhoto: row.author_photo_url || profile.avatar_url || "",
     title: row.title,
-    submissionType: row.submission_type,
+    submissionType: "Book",
     bookGenre: row.book_genre,
     lgbtqCategory: row.lgbtq_category,
     readerFilter: row.reader_filter,
     storyTags: row.story_tags || [],
-    body: row.body,
+    body: row.body || "",
+    chapters: chapters
+      .map((chapter) => ({
+        id: chapter.id,
+        number: chapter.chapter_number,
+        title: chapter.title,
+        body: chapter.body,
+        createdAt: chapter.created_at
+      }))
+      .sort((a, b) => a.number - b.number),
     createdAt: row.created_at
   };
 }
@@ -193,7 +203,7 @@ async function loadSubmissions() {
 
   const { data, error } = await client
     .from("books")
-    .select("*, profiles:author_id(pen_name, avatar_url)")
+    .select("*, profiles:author_id(pen_name, avatar_url), book_chapters(*)")
     .eq("publication_status", "published")
     .order("created_at", { ascending: false });
 
@@ -243,10 +253,40 @@ async function uploadAuthorPhoto(file, user) {
 async function saveSubmission(submission, photoFile) {
   const client = getSupabaseClient();
   if (!client) {
-    const submissions = readLocalJson(STORAGE_KEY);
-    submissions.unshift(submission);
-    saveLocalJson(STORAGE_KEY, submissions);
-    submissionsCache = submissions;
+    const books = readLocalJson(STORAGE_KEY);
+    let book = books.find((item) => item.title.toLowerCase() === submission.title.toLowerCase() && item.writer === submission.writer);
+    if (!book) {
+      book = {
+        id: createId("book"),
+        writer: submission.writer,
+        authorPhoto: submission.authorPhoto,
+        title: submission.title,
+        submissionType: "Book",
+        bookGenre: submission.bookGenre,
+        lgbtqCategory: submission.lgbtqCategory,
+        readerFilter: submission.readerFilter,
+        storyTags: submission.storyTags,
+        body: submission.bookDescription,
+        chapters: [],
+        createdAt: new Date().toISOString()
+      };
+      books.unshift(book);
+    }
+
+    book.chapters = book.chapters || [];
+    book.authorPhoto = submission.authorPhoto || book.authorPhoto;
+    book.body = submission.bookDescription || book.body;
+    book.readerFilter = submission.readerFilter;
+    book.chapters.push({
+      id: createId("chapter"),
+      number: submission.chapterNumber,
+      title: submission.chapterTitle,
+      body: submission.chapterBody,
+      createdAt: new Date().toISOString()
+    });
+    book.chapters.sort((a, b) => a.number - b.number);
+    saveLocalJson(STORAGE_KEY, books);
+    submissionsCache = books;
     return;
   }
 
@@ -256,17 +296,60 @@ async function saveSubmission(submission, photoFile) {
     await client.from("profiles").update({ avatar_url: authorPhotoUrl }).eq("id", user.id);
   }
 
-  const { error } = await client.from("books").insert({
+  const { data: existingBook, error: findError } = await client
+    .from("books")
+    .select("id")
+    .eq("author_id", user.id)
+    .eq("title", submission.title)
+    .maybeSingle();
+
+  if (findError) throw findError;
+
+  let bookId = existingBook?.id;
+  if (!bookId) {
+    const { data: newBook, error: bookError } = await client
+      .from("books")
+      .insert({
+        author_id: user.id,
+        title: submission.title,
+        submission_type: "Book",
+        book_genre: submission.bookGenre,
+        lgbtq_category: submission.lgbtqCategory || null,
+        reader_filter: submission.readerFilter,
+        story_tags: submission.storyTags,
+        body: submission.bookDescription || "Chapter collection",
+        author_photo_url: authorPhotoUrl || user.avatarUrl || null,
+        publication_status: "published"
+      })
+      .select("id")
+      .single();
+
+    if (bookError) throw bookError;
+    bookId = newBook.id;
+  } else {
+    const { error: updateError } = await client
+      .from("books")
+      .update({
+        book_genre: submission.bookGenre,
+        lgbtq_category: submission.lgbtqCategory || null,
+        reader_filter: submission.readerFilter,
+        story_tags: submission.storyTags,
+        body: submission.bookDescription || "Chapter collection",
+        author_photo_url: authorPhotoUrl || user.avatarUrl || null,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", bookId)
+      .eq("author_id", user.id);
+
+    if (updateError) throw updateError;
+  }
+
+  const { error } = await client.from("book_chapters").insert({
+    book_id: bookId,
     author_id: user.id,
-    title: submission.title,
-    submission_type: submission.submissionType,
-    book_genre: submission.bookGenre,
-    lgbtq_category: submission.lgbtqCategory || null,
-    reader_filter: submission.readerFilter,
-    story_tags: submission.storyTags,
-    body: submission.body,
-    author_photo_url: authorPhotoUrl || user.avatarUrl || null,
-    publication_status: "published"
+    chapter_number: submission.chapterNumber,
+    title: submission.chapterTitle,
+    body: submission.chapterBody
   });
 
   if (error) throw error;
@@ -434,7 +517,7 @@ function metaTagsFor(item) {
     item.bookGenre || item.genre || "General",
     item.lgbtqCategory,
     item.readerFilter,
-    item.submissionType || item.type || "Submission",
+    `${(item.chapters || []).length} chapter${(item.chapters || []).length === 1 ? "" : "s"}`,
     ...tags
   ].filter(Boolean);
 }
@@ -443,25 +526,33 @@ function renderCommunityShelf() {
   const shelf = document.querySelector("#communityShelf");
   if (!shelf) return;
 
-  const submissions = getSubmissions();
-  if (submissions.length === 0) {
+  const books = getSubmissions();
+  if (books.length === 0) {
     shelf.innerHTML = `
       <article class="empty-state">
         <h3>The Community Shelf is waiting.</h3>
-        <p>Books, chapters, and serial updates published from the submission page will appear here.</p>
+        <p>Books will appear here as authors publish their first chapters.</p>
         <a class="button secondary" href="${pathFor("submit.html")}">Submit the first chapter</a>
       </article>
     `;
     return;
   }
 
-  shelf.innerHTML = submissions.map((item) => {
+  shelf.innerHTML = books.map((item) => {
     const bookGenre = item.bookGenre || item.genre || "General";
     const lgbtqCategory = item.lgbtqCategory || "";
     const storyTags = Array.isArray(item.storyTags) ? item.storyTags : [];
     const readerFilter = item.readerFilter || "Recently Updated";
-    const submissionType = item.submissionType || item.type || "Submission";
-    const meta = metaTagsFor({ ...item, bookGenre, readerFilter, submissionType });
+    const chapters = item.chapters?.length
+      ? item.chapters
+      : [{
+        id: item.id,
+        number: 1,
+        title: item.chapterTitle || "Chapter 1",
+        body: item.chapterBody || item.body || "",
+        createdAt: item.createdAt
+      }];
+    const meta = metaTagsFor({ ...item, bookGenre, readerFilter, chapters });
 
     return `
       <article class="work-card"
@@ -472,12 +563,105 @@ function renderCommunityShelf() {
         <div class="work-meta">
           ${meta.map((tag) => `<span>${escapeText(tag)}</span>`).join("")}
         </div>
-        <h3>${escapeText(item.title)}</h3>
+        <details class="book-details">
+          <summary>
+            <span>${escapeText(item.title)}</span>
+            <small>Open chapters</small>
+          </summary>
+          <a class="reader-close-link" href="${pathFor("books.html")}">Back to Library</a>
+          ${item.body ? `<p class="book-description">${escapeText(item.body)}</p>` : ""}
+          <div class="chapter-list">
+            ${chapters.map((chapter) => `
+              <details class="chapter-details">
+                <summary>Chapter ${escapeText(chapter.number)}: ${escapeText(chapter.title)}</summary>
+                <div class="chapter-body">${escapeText(chapter.body).replaceAll("\n", "<br>")}</div>
+              </details>
+            `).join("")}
+          </div>
+        </details>
         <p class="byline">By ${escapeText(item.writer)}</p>
-        <p>${escapeText(item.body).replaceAll("\n", "<br>")}</p>
       </article>
     `;
   }).join("");
+}
+
+function exitLibraryReaderMode({ closeBook = true } = {}) {
+  document.body.classList.remove("library-reader-mode");
+  document.querySelectorAll(".work-card.is-reading-book").forEach((card) => card.classList.remove("is-reading-book"));
+  document.querySelectorAll(".shelf-section.is-reading-section").forEach((section) => section.classList.remove("is-reading-section"));
+  document.querySelectorAll(".reading-mode-bar").forEach((bar) => bar.remove());
+
+  if (closeBook) {
+    document.querySelectorAll(".book-details[open]").forEach((details) => {
+      details.open = false;
+    });
+  }
+}
+
+function enterLibraryReaderMode(bookDetails) {
+  const card = bookDetails.closest(".work-card");
+  const section = bookDetails.closest(".shelf-section");
+  if (!card || !section) return;
+
+  document.querySelectorAll(".book-details").forEach((details) => {
+    if (details !== bookDetails) details.open = false;
+  });
+
+  exitLibraryReaderMode({ closeBook: false });
+  bookDetails.open = true;
+  document.body.classList.add("library-reader-mode");
+  card.classList.add("is-reading-book");
+  section.classList.add("is-reading-section");
+
+  if (!card.querySelector(".reading-mode-bar")) {
+    const title = bookDetails.querySelector("summary span")?.textContent || "Selected book";
+    const bar = document.createElement("div");
+    bar.className = "reading-mode-bar";
+    bar.innerHTML = `
+      <div>
+        <p class="section-kicker">Reading</p>
+        <h2>${escapeText(title)}</h2>
+      </div>
+      <button class="button secondary" type="button">Back to Library</button>
+    `;
+    bar.querySelector("button").addEventListener("click", () => exitLibraryReaderMode());
+    card.prepend(bar);
+  }
+
+  card.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function setupLibraryReaderMode() {
+  const library = document.querySelector("#communityShelf");
+  const hasBookDetails = document.querySelector(".book-details");
+  if (!library && !hasBookDetails) return;
+
+  document.addEventListener("click", (event) => {
+    const summary = event.target.closest?.(".book-details > summary");
+    if (!summary) return;
+
+    const bookDetails = summary.closest(".book-details");
+    if (!bookDetails) return;
+
+    event.preventDefault();
+    if (bookDetails.closest(".work-card")?.classList.contains("is-reading-book")) {
+      exitLibraryReaderMode();
+      return;
+    }
+
+    enterLibraryReaderMode(bookDetails);
+  });
+
+  document.addEventListener("toggle", (event) => {
+    const bookDetails = event.target.closest?.(".book-details");
+    if (!bookDetails) return;
+
+    if (bookDetails.open) {
+      enterLibraryReaderMode(bookDetails);
+    } else if (bookDetails.closest(".work-card")?.classList.contains("is-reading-book")) {
+      exitLibraryReaderMode({ closeBook: false });
+    }
+  }, true);
 }
 
 function setupGenreFilters() {
@@ -528,8 +712,8 @@ function renderAuthors() {
   const authorsGrid = document.querySelector("#authorsGrid");
   if (!authorsGrid) return;
 
-  const submissions = getSubmissions();
-  if (submissions.length === 0) {
+  const books = getSubmissions();
+  if (books.length === 0) {
     authorsGrid.innerHTML = `
       <article class="empty-state">
         <h3>No community authors yet.</h3>
@@ -541,17 +725,19 @@ function renderAuthors() {
   }
 
   const authors = new Map();
-  submissions.forEach((item) => {
+  books.forEach((item) => {
     const name = item.writer || "Anonymous Author";
     const current = authors.get(name) || {
       name,
       photo: "",
       books: [],
+      chapterCount: 0,
       genres: new Set()
     };
 
     if (item.authorPhoto) current.photo = item.authorPhoto;
     current.books.push(item.title);
+    current.chapterCount += (item.chapters || []).length || 1;
     current.genres.add(item.bookGenre || item.genre || "General");
     authors.set(name, current);
   });
@@ -568,7 +754,7 @@ function renderAuthors() {
         <div class="author-avatar">${avatar}</div>
         <div>
           <h3>${escapeText(author.name)}</h3>
-          <p>${author.books.length} published entr${author.books.length === 1 ? "y" : "ies"} on Prism Haven.</p>
+          <p>${author.books.length} book${author.books.length === 1 ? "" : "s"} and ${author.chapterCount} chapter${author.chapterCount === 1 ? "" : "s"} on Prism Haven.</p>
           <p class="byline">Latest: ${escapeText(latestTitle)}</p>
           <div class="work-meta">
             ${genres.map((genre) => `<span>${escapeText(genre)}</span>`).join("")}
@@ -610,16 +796,19 @@ function setupSubmissionForm() {
       writer: data.get("writer").trim(),
       authorPhoto: !getSupabaseClient() && photoFile && photoFile.size ? await readFileAsDataUrl(photoFile) : "",
       title: data.get("title").trim(),
-      submissionType: data.get("submissionType"),
+      submissionType: "Chapter",
       bookGenre: data.get("bookGenre"),
       lgbtqCategory: data.get("lgbtqCategory"),
       readerFilter: data.get("readerFilter"),
       storyTags,
-      body: data.get("body").trim(),
+      bookDescription: data.get("bookDescription").trim(),
+      chapterNumber: Number(data.get("chapterNumber")),
+      chapterTitle: data.get("chapterTitle").trim(),
+      chapterBody: data.get("chapterBody").trim(),
       createdAt: new Date().toISOString()
     };
 
-    if (!submission.writer || !submission.title || !submission.submissionType || !submission.bookGenre || !submission.readerFilter || !submission.body) {
+    if (!submission.writer || !submission.title || !submission.chapterNumber || !submission.chapterTitle || !submission.bookGenre || !submission.readerFilter || !submission.chapterBody) {
       status.textContent = "Please complete every required field before publishing.";
       return;
     }
@@ -630,8 +819,8 @@ function setupSubmissionForm() {
       form.reset();
       if (form.elements.writer && user?.name) form.elements.writer.value = user.name;
       status.textContent = getSupabaseClient()
-        ? "Published. Your submission is now stored in Supabase."
-        : "Published. Your submission is now in the Library and Authors page on this browser.";
+        ? "Chapter published. It now appears under this book in Supabase."
+        : "Chapter published. It now appears under this book in the Library on this browser.";
       renderCommunityShelf();
       renderAuthors();
       setupGenreFilters();
@@ -836,6 +1025,7 @@ async function initPrismHaven() {
   await loadCurrentUser();
   await Promise.all([loadSubmissions(), loadBlogPosts()]);
   renderCommunityShelf();
+  setupLibraryReaderMode();
   setupGenreFilters();
   renderAuthors();
   setupSubmissionForm();

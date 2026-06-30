@@ -24,6 +24,18 @@ create table public.books (
   updated_at timestamptz not null default now()
 );
 
+create table public.book_chapters (
+  id uuid primary key default gen_random_uuid(),
+  book_id uuid not null references public.books(id) on delete cascade,
+  author_id uuid not null references public.profiles(id) on delete cascade,
+  chapter_number integer not null,
+  title text not null,
+  body text not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (book_id, chapter_number)
+);
+
 create table public.community_posts (
   id uuid primary key default gen_random_uuid(),
   author_id uuid references public.profiles(id) on delete set null,
@@ -45,6 +57,7 @@ create table public.post_comments (
 
 alter table public.profiles enable row level security;
 alter table public.books enable row level security;
+alter table public.book_chapters enable row level security;
 alter table public.community_posts enable row level security;
 alter table public.post_comments enable row level security;
 
@@ -80,6 +93,43 @@ create policy "Authors can update their own books"
     and exists (
       select 1 from public.profiles
       where profiles.id = auth.uid()
+      and profiles.role = 'author'
+    )
+  );
+
+create policy "Published book chapters are readable by everyone"
+  on public.book_chapters for select
+  using (
+    exists (
+      select 1 from public.books
+      where books.id = book_chapters.book_id
+      and books.publication_status = 'published'
+    )
+  );
+
+create policy "Authors can publish chapters for their own books"
+  on public.book_chapters for insert
+  with check (
+    auth.uid() = author_id
+    and exists (
+      select 1 from public.books
+      join public.profiles on profiles.id = books.author_id
+      where books.id = book_chapters.book_id
+      and books.author_id = auth.uid()
+      and profiles.role = 'author'
+    )
+  );
+
+create policy "Authors can update their own chapters"
+  on public.book_chapters for update
+  using (auth.uid() = author_id)
+  with check (
+    auth.uid() = author_id
+    and exists (
+      select 1 from public.books
+      join public.profiles on profiles.id = books.author_id
+      where books.id = book_chapters.book_id
+      and books.author_id = auth.uid()
       and profiles.role = 'author'
     )
   );
@@ -142,3 +192,22 @@ create policy "Signed in users can update their own author avatar"
     bucket_id = 'author-avatars'
     and auth.uid()::text = (storage.foldername(name))[1]
   );
+
+grant usage on schema public to anon, authenticated;
+
+grant select on public.profiles to anon, authenticated;
+grant update on public.profiles to authenticated;
+
+grant select on public.books to anon, authenticated;
+grant insert, update on public.books to authenticated;
+
+grant select on public.book_chapters to anon, authenticated;
+grant insert, update on public.book_chapters to authenticated;
+
+grant select on public.community_posts to anon, authenticated;
+grant insert on public.community_posts to authenticated;
+
+grant select on public.post_comments to anon, authenticated;
+grant insert on public.post_comments to authenticated;
+
+grant usage, select on all sequences in schema public to authenticated;

@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="../styles.css?v=2" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../supabase-config.js"></script>
   <script src="../app.js" defer></script>
@@ -23,7 +23,7 @@
       <a href="books.html" aria-current="page">Library</a>
       <a href="authors.html">Authors</a>
       <a href="community.html">Community</a>
-      <a href="submit.html">Submit Book</a>
+      <a href="submit.html">Publish Chapter</a>
       <a href="about.html">About</a>
       <a href="contact.html">Contact</a>
       <a href="signin.html">Sign In</a>
@@ -57,7 +57,6 @@
           <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Adventure">Adventure</button>
           <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Drama">Drama</button>
           <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Comedy">Comedy</button>
-          <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Poetry">Poetry</button>
           <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Fan Fiction">Fan Fiction</button>
           <button class="genre-filter" type="button" data-filter-type="genre" data-filter-value="Non-Fiction">Non-Fiction</button>
         </div>
@@ -128,8 +127,17 @@
             <span>LGBTQ+ Fantasy</span>
             <span>Editor's Picks</span>
           </div>
-          <h3>The City Beneath the Glass</h3>
-          <p>Amara finds a map hidden inside her grandmother's old dictionary, and every street on it leads to a city no one in her family is allowed to name.</p>
+          <details class="book-details">
+            <summary><span>The City Beneath the Glass</span><small>Open chapters</small></summary>
+            <a class="reader-close-link" href="books.html">Back to Library</a>
+            <p class="book-description">Amara finds a map hidden inside her grandmother's old dictionary, and every street on it leads to a city no one in her family is allowed to name.</p>
+            <div class="chapter-list">
+              <details class="chapter-details">
+                <summary>Chapter 1: The Map in the Dictionary</summary>
+                <div class="chapter-body">A preview chapter will appear here when the featured author publishes the opening chapter.</div>
+              </details>
+            </div>
+          </details>
         </article>
         <article class="work-card" data-genre="Romance" data-lgbtq="Sapphic (WLW)" data-tags="Friends to Lovers|Slow Burn|Forbidden Love" data-status="Completed">
           <div class="work-meta">
@@ -137,8 +145,17 @@
             <span>Sapphic (WLW)</span>
             <span>Completed</span>
           </div>
-          <h3>Letters Left at Platform Nine</h3>
-          <p>Two strangers keep missing the same train and leaving notes in the same cracked station bench, slowly writing themselves into each other's lives.</p>
+          <details class="book-details">
+            <summary><span>Letters Left at Platform Nine</span><small>Open chapters</small></summary>
+            <a class="reader-close-link" href="books.html">Back to Library</a>
+            <p class="book-description">Two strangers keep missing the same train and leaving notes in the same cracked station bench, slowly writing themselves into each other's lives.</p>
+            <div class="chapter-list">
+              <details class="chapter-details">
+                <summary>Chapter 1: The Bench With the Crack</summary>
+                <div class="chapter-body">A preview chapter will appear here when the featured author publishes the opening chapter.</div>
+              </details>
+            </div>
+          </details>
         </article>
         <article class="work-card" data-genre="Paranormal" data-lgbtq="LGBTQ+ Paranormal" data-tags="Fated Mates|Vampires|Werewolves" data-status="New Release">
           <div class="work-meta">
@@ -146,8 +163,17 @@
             <span>LGBTQ+ Paranormal</span>
             <span>New Release</span>
           </div>
-          <h3>When the Moon Remembers</h3>
-          <p>A runaway archivist discovers that every full moon unlocks a different chapter of a love story older than the city itself.</p>
+          <details class="book-details">
+            <summary><span>When the Moon Remembers</span><small>Open chapters</small></summary>
+            <a class="reader-close-link" href="books.html">Back to Library</a>
+            <p class="book-description">A runaway archivist discovers that every full moon unlocks a different chapter of a love story older than the city itself.</p>
+            <div class="chapter-list">
+              <details class="chapter-details">
+                <summary>Chapter 1: Archive of Moonlight</summary>
+                <div class="chapter-body">A preview chapter will appear here when the featured author publishes the opening chapter.</div>
+              </details>
+            </div>
+          </details>
         </article>
       </div>
     </section>
@@ -155,7 +181,7 @@
     <section class="shelf-section" aria-labelledby="community-title">
       <div class="section-heading">
         <p class="section-kicker">Community Shelf</p>
-        <h2 id="community-title">Community Books and Chapters</h2>
+        <h2 id="community-title">Community Books</h2>
       </div>
       <div id="communityShelf" class="work-grid empty-ready" aria-live="polite"></div>
     </section>

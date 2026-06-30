@@ -1,10 +1,10 @@
 :root {
   --ink: #1c1d22;
   --muted: #5d6270;
-  --paper: #fffaf1;
-  --paper-deep: #f3ead8;
-  --surface: #ffffff;
-  --line: #ded5c7;
+  --paper: #f4edf9;
+  --paper-deep: #e7d8ef;
+  --surface: #fffafd;
+  --line: #d6c0df;
   --plum: #5b315f;
   --teal: #126c68;
   --gold: #c88a2a;
@@ -24,8 +24,9 @@ body {
   margin: 0;
   color: var(--ink);
   background:
-    linear-gradient(90deg, rgba(18, 108, 104, 0.06) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(91, 49, 95, 0.045) 1px, transparent 1px),
+    radial-gradient(circle at top left, rgba(182, 84, 104, 0.12), transparent 34vw),
+    linear-gradient(90deg, rgba(91, 49, 95, 0.075) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(18, 108, 104, 0.045) 1px, transparent 1px),
     var(--paper);
   background-size: 44px 44px;
   font-family: "Manrope", Arial, sans-serif;
@@ -45,7 +46,7 @@ svg {
   align-items: center;
   justify-content: space-between;
   gap: 18px;
-  background: rgba(255, 250, 241, 0.92);
+  background: rgba(250, 244, 253, 0.92);
   border: 1px solid var(--line);
   border-radius: 8px;
   position: sticky;
@@ -463,6 +464,235 @@ footer {
 
 .work-card {
   padding: 24px;
+}
+
+body.library-reader-mode {
+  background: var(--paper);
+}
+
+body:has(.book-details[open]) {
+  background: var(--paper);
+}
+
+body:has(.book-details[open]) .site-header,
+body:has(.book-details[open]) footer,
+body:has(.book-details[open]) .page-heading,
+body:has(.book-details[open]) .library-filter,
+body:has(.book-details[open]) .shelf-section {
+  display: none;
+}
+
+body:has(.book-details[open]) main {
+  width: min(980px, calc(100% - 32px));
+}
+
+body:has(.book-details[open]) .shelf-section:has(.book-details[open]) {
+  display: block;
+  margin: clamp(18px, 4vw, 42px) 0;
+}
+
+body:has(.book-details[open]) .section-heading,
+body:has(.book-details[open]) .work-card {
+  display: none;
+}
+
+body:has(.book-details[open]) .work-card:has(.book-details[open]) {
+  min-height: calc(100vh - 48px);
+  padding: clamp(20px, 4vw, 44px);
+  display: block;
+  box-shadow: none;
+}
+
+body:has(.book-details[open]) .work-grid {
+  display: block;
+}
+
+body.library-reader-mode .site-header,
+body.library-reader-mode footer,
+body.library-reader-mode .page-heading,
+body.library-reader-mode .library-filter,
+body.library-reader-mode .shelf-section {
+  display: none;
+}
+
+body.library-reader-mode main {
+  width: min(980px, calc(100% - 32px));
+}
+
+body.library-reader-mode .shelf-section.is-reading-section {
+  display: block;
+  margin: clamp(18px, 4vw, 42px) 0;
+}
+
+body.library-reader-mode .section-heading,
+body.library-reader-mode .work-card {
+  display: none;
+}
+
+body.library-reader-mode .work-card.is-reading-book {
+  min-height: calc(100vh - 48px);
+  padding: clamp(20px, 4vw, 44px);
+  display: block;
+  box-shadow: none;
+}
+
+body.library-reader-mode .work-grid {
+  display: block;
+}
+
+.reading-mode-bar {
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.reading-mode-bar h2 {
+  font-size: clamp(1.7rem, 4vw, 3rem);
+  line-height: 1.08;
+}
+
+.reader-close-link {
+  width: fit-content;
+  min-height: 42px;
+  margin: 14px 0 4px;
+  padding: 10px 14px;
+  display: none;
+  align-items: center;
+  color: var(--ink);
+  background: var(--paper-deep);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+body:has(.book-details[open]) .reader-close-link,
+body.library-reader-mode .reader-close-link {
+  display: inline-flex;
+}
+
+.book-details {
+  display: grid;
+  gap: 14px;
+}
+
+.book-details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.book-details > summary::-webkit-details-marker,
+.chapter-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.book-details > summary span {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.book-details > summary small {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  color: #fff;
+  background: var(--teal);
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+.book-description {
+  margin: 12px 0 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.chapter-list {
+  display: grid;
+  gap: 10px;
+}
+
+.chapter-details {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffdf8;
+  overflow: hidden;
+}
+
+.chapter-details > summary {
+  padding: 12px 14px;
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.chapter-details[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.chapter-body {
+  max-height: 520px;
+  overflow: auto;
+  padding: 16px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+body.library-reader-mode .book-details > summary {
+  display: none;
+}
+
+body.library-reader-mode .book-description {
+  max-width: 75ch;
+  margin: 0 0 24px;
+  font-size: 1.05rem;
+}
+
+body:has(.book-details[open]) .book-description {
+  max-width: 75ch;
+  margin: 18px 0 24px;
+  font-size: 1.05rem;
+}
+
+body.library-reader-mode .chapter-list {
+  gap: 14px;
+}
+
+body:has(.book-details[open]) .chapter-list {
+  gap: 14px;
+}
+
+body.library-reader-mode .chapter-details > summary {
+  padding: 16px 18px;
+  font-size: 1.05rem;
+}
+
+body:has(.book-details[open]) .chapter-details > summary {
+  padding: 16px 18px;
+  font-size: 1.05rem;
+}
+
+body.library-reader-mode .chapter-body {
+  max-height: none;
+  padding: clamp(18px, 3vw, 32px);
+  font-size: 1.06rem;
+  line-height: 1.9;
+}
+
+body:has(.book-details[open]) .chapter-body {
+  max-height: none;
+  padding: clamp(18px, 3vw, 32px);
+  font-size: 1.06rem;
+  line-height: 1.9;
 }
 
 .byline {
@@ -975,7 +1205,23 @@ textarea:focus {
     width: min(100% - 20px, 1180px);
   }
 
+  .site-header {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  nav {
+    width: 100%;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+  }
+
   nav a {
+    flex: 0 0 auto;
+    min-height: 34px;
     padding-inline: 9px;
     font-size: 0.86rem;
   }
@@ -986,7 +1232,7 @@ textarea:focus {
 
   .hero h1,
   .page-heading h1 {
-    font-size: clamp(2.45rem, 15vw, 4rem);
+    font-size: clamp(2.2rem, 13vw, 3.7rem);
   }
 
   .actions,

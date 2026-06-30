@@ -1,4 +1,4 @@
 window.PRISM_HAVEN_SUPABASE = {
-  url: "YOUR_SUPABASE_URL",
-  anonKey: "YOUR_SUPABASE_ANON_KEY"
+  url: "https://woqeeuybxkvzivewcmyc.supabase.co",
+  anonKey: "sb_publishable_c2At1tuPLOkAxWD9JQ6FAA_PGcBOdnl"
 };
